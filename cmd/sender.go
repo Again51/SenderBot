@@ -12,23 +12,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-var	Token     string
-var	BotChan 	string
-var	fileName 	string
-var BotId 		string
-var	config 		*configStruct
-var goBot 		*discordgo.Session
-
+var Token string
+var BotChan string
+var fileName string
+var BotId string
+var config *configStruct
+var goBot *discordgo.Session
 
 type configStruct struct {
-	Token     string `json:"Token"`
-	BotChan 	string `json:"BotChan"`
+	Token   string `json:"Token"`
+	BotChan string `json:"BotChan"`
 }
 
-
 func init() {
-	file, err := ioutil.ReadFile("/home/user/Documents/sender/config.json")
+	file, err := ioutil.ReadFile("/home/user/Bureau/sender/config.json")
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -49,7 +46,6 @@ func init() {
 	BotChan = config.BotChan
 }
 
-
 func start() {
 	goBot, err := discordgo.New("Bot " + Token)
 	if err != nil {
@@ -64,6 +60,7 @@ func start() {
 	}
 
 	BotId = u.ID
+	goBot.AddHandler(sendAllFiles)
 	goBot.AddHandler(sendF)
 
 	err = goBot.Open()
@@ -74,27 +71,22 @@ func start() {
 	fmt.Println("Envois du fichier...")
 }
 
-
 func sendF(s *discordgo.Session, event *discordgo.Ready) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	s.ChannelFileSend(BotChan,filepath.Base(fileName), file)
+	s.ChannelFileSend(BotChan, filepath.Base(fileName), file)
 }
-
 
 var sendCmd = &cobra.Command{
 	Use:   "file",
 	Short: "Envois un fichier vers le serveur discord",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		start()
 		time.Sleep(2 * time.Second)
-		fmt.Println("Le fichier",filepath.Base(fileName), "a été envoyé")
+		fmt.Println("Le fichier", filepath.Base(fileName), "a été envoyé")
 	},
 }
-
-
-
