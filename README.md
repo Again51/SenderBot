@@ -18,7 +18,7 @@ Téléchargez à l'endroit souhaité le dossier.
 ```
 cd /home/user/Bureau/sender 
 ```
-- Une fois dans le dossier sender, utiliser la commende suivante :
+- Une fois dans le dossier sender, utiliser la commande suivante :
 ```
 go build -o send
 ```
